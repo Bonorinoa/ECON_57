@@ -1,0 +1,4 @@
+"0","# Calculate mean and median"
+"0","income <- c(40000, 45000, 52000, 60000, 67000)"
+"0","mean_income <- mean(income)"
+"0","median_income <- median(income)"

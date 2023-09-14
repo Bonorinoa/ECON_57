@@ -1,0 +1,2 @@
+"0","# Create a histogram"
+"0","hist(heights, main = ""Height Distribution"", xlab = ""Height (inches)"")"

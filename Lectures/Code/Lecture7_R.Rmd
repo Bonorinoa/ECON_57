@@ -1,0 +1,188 @@
+---
+title: "ECON 57: Economic Statistics - R Notebook 7"
+output: html_notebook
+---
+
+# Probability in R
+
+## Introduction
+
+In R, we can perform probability analyses in two ways: 1) Applying the mathematical formulas we have covered in class, or 2) coding simulations 
+
+
+```{r}
+# Applying the formula P(A) = # favorable outcomes / sample size
+# Sample space
+S <- c(1, 2, 3, 4, 5, 6)
+
+# Event A: rolling an even number
+A <- c(2, 4, 6)
+
+# Event B: rolling a number greater than 4
+B <- c(5, 6)
+
+# Compute the probabilities of A and B (assuming equally likely outcomes)
+P_A <- length(A) / length(S)
+P_B <- length(B) / length(S)
+
+P_A
+P_B
+```
+
+```{r}
+# simple simulations
+# Set the seed for reproducibility. Try running this cell with different seeds, what happens?
+set.seed(123)
+
+# Simulate a coin flip
+coin_flips <- sample(c("Heads", "Tails"), size = 1, replace = TRUE)
+print(coin_flips)
+```
+
+You can also calculate the probability of getting heads with a large number of coin flips
+
+```{r}
+# simulate 10000 coin flips. Run moew simulations varying the sample size and the sampling method. What happens as the sample size gets bigger and bigger?
+coin_flips <- sample(c("Heads", "Tails"), size = 10000, replace = TRUE)
+print(coin_flips)
+
+# Calculate the probability of getting a head
+prob_heads <- sum(coin_flips == "Heads") / length(coin_flips)
+print(prob_heads)
+```
+
+Here, we have simulated flipping a fair coin 10,000 times and calculated the probability of getting a "head".
+
+## II. Kolmogorov Axioms
+
+Let's further illustrate these concepts using random experiments in R.
+
+1. **Nonnegativity**: The probability of an event is always greater than or equal to 0.
+
+Since R normalizes the probabilities to sum to 1 in the `sample()` function, we see that the chances of landing any event is always nonnegative.
+
+```{r}
+# Set the seed for reproducibility
+set.seed(148)
+
+# A 6-face fair die
+die <- c(1, 2, 3, 4, 5, 6)
+
+# Roll the die 1000 times
+rolls <- sample(die, size = 1000, replace = TRUE)
+
+# Probabilities (normalized frequencies) of each outcome
+probs <- table(rolls) / length(rolls)
+print(probs >= 0)
+```
+
+2. **Unit Measure**: The probability of the sample space is always 1.
+
+We can see that the sum of all the probabilities comes up to 1.
+
+```{r}
+sum(probs)
+```
+
+3. **Additivity**: For any two mutually exclusive events, the probability that at least one of the events will occur is the sum of their individual probabilities.
+
+Let's calculate the probability of landing 1 or 2.
+
+```{r}
+# Probability of landing a 1 or 2
+prob_1_or_2 <- sum(probs[c("1", "2")])
+print(prob_1_or_2)
+```
+
+## III. Conditional Probability 
+
+Conditional probability is the probability of an event given that another event has occurred. Let's simulate a case where we flip two coins in a row. We're interested in knowing the probability of the second coin being heads given that the first coin was heads.
+
+```{r}
+# Set the seed for reproducibility
+set.seed(111)
+
+# Flipping a coin twice
+coin_flips <- sample(c("Heads", "Tails"), size = 10000, replace = TRUE, prob = c(0.5, 0.5))
+
+# Create two vectors: one for the first flip, and the other for the second flip
+first_flip <- coin_flips[seq(from=1,to=10000,by=2)] # seq() is a built-in function to generate a sequence in R
+second_flip <- coin_flips[seq(2,10000,2)]
+
+# Find the probability that the second coin is a head given that the first coin was a head
+# Apply the formula we learnt P(H|H) = P(H and H)/P(H)
+# We count all the ocurrences in both flips in which both outcomes came out Heads, sum them, and divide them by the probability of getting Heads in any given roll
+prob_second_head_given_first_head <- sum(first_flip == "Heads" & second_flip == "Heads") / sum(first_flip == "Heads")
+
+print(prob_second_head_given_first_head)
+```
+
+In this code, we calculate the probability of drawing an Ace from a deck of cards, given that the previous draw was also an Ace.
+
+# Class Activities 
+
+1. **Decipher the Dice:** You roll a die 100 times. Calculate the probabilities of rolling a 1, a 2, a 3, a 4, a 5 and a 6. Also calculate the cumulative probability of rolling a 1, 2, or 3.
+
+```{r}
+# Set seed for reproducibility
+set.seed(42)
+
+# Roll a die 100 times
+rolls <- sample(die, size = 100, replace = TRUE)
+
+# Probabilities (normalized frequencies) of each outcome
+probs <- table(rolls) / length(rolls)
+
+# Cumulative probability of 1, 2 or 3
+cumulative_prob <- sum(probs[c("1", "2", "3")])
+
+probs
+cumulative_prob
+```
+
+2. **Ace out the Cards:** Simulate drawing a card from a deck 5000 times. Calculate the following conditional probabilities: 
+   - The chance of drawing a king given that the card drawn was a face card (Ace, King, Queen, and Jack are considered face cards)
+   - The chance of drawing a face card given that the card drawn was a king.
+   
+```{r}
+# Set the seed for reproducibility
+set.seed(789)
+
+# The 52 cards in a deck
+cards <- c(rep("King", 4), rep("Face card", 12), rep("Not face card", 36))
+
+# Draw a card 5000 times
+draws <- sample(cards, size = 5000, replace = TRUE)
+
+# Calculate conditional probabilities
+prob_king_given_face <- sum(draws[1:(length(draws) - 1)] == "Face card" & draws[2:length(draws)] == "King") 
+                         / sum(draws[1:(length(draws) - 1)] == "Face card")
+
+prob_face_given_king <- sum(draws[1:(length(draws) - 1)] == "King" & draws[2:length(draws)] == "Face card") 
+                          / sum(draws[1:(length(draws) - 1)] == "King")
+
+prob_king_given_face
+prob_face_given_king
+```
+
+3. **Economic Scenario: Stock Returns**
+
+Suppose we have two stocks, stock A and stock B. The returns of both stocks are normally distributed. The return of stock A follows a normal distribution with mean 0.05 (5%) and standard deviation 0.1 (10%), while the return of stock B follows a normal distribution with mean 0.06 (6%) and standard deviation 0.2 (20%).
+
+We can generate random returns for these two stocks and estimate the probability of negative return for each stock.
+
+```{r}
+# Set the seed for reproducibility
+set.seed(234)
+
+# Generate 10000 random returns for each stock
+returns_A <- rnorm(10000, mean = 0.05, sd = 0.1)
+returns_B <- rnorm(10000, mean = 0.06, sd = 0.2)
+
+# Calculate the probability of negative return for each stock
+prob_negative_return_A <- sum(returns_A < 0) / length(returns_A)
+prob_negative_return_B <- sum(returns_B < 0) / length(returns_B)
+
+print(paste0("Probability of negative return for stock A: ", prob_negative_return_A))
+print(paste0("Probability of negative return for stock B: ", prob_negative_return_B))
+```

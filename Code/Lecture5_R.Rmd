@@ -1,0 +1,137 @@
+---
+title: "ECON 57: Economic Statistics - R Notebook"
+output: html_notebook
+---
+
+
+# Advanced Visualizations with ggplot2 and Data Wrangling with dplyr - Part I
+
+In this lecture, we will explore advanced visualization techniques using the ggplot2 package and introduce data wrangling concepts using the dplyr package. These tools are essential for effective data analysis and visualization in economics.
+
+## Advanced Visualizations in R with ggplot2
+
+[ggplot2](https://ggplot2.tidyverse.org/reference/) is a powerful package for creating complex and customized visualizations in R. It follows the Grammar of Graphics, which allows you to build plots layer by layer. Let's start by understanding the anatomy of a ggplot2 plot.
+
+### Anatomy of a ggplot2 Plot
+
+A ggplot2 plot consists of the following components:
+
+**Data**: The data frame containing the variables you want to visualize.
+**Aesthetics (aes)**: Mapping of variables to visual properties (e.g., x-axis, y-axis, color, size).
+**Geometric Objects (geoms)**: Representations of the data points (e.g., points, lines, bars).
+**Facets**: Used for creating small multiples, allowing you to break down the data into subsets.
+**Themes**: Control the overall appearance of the plot.
+
+### Creating a Scatter Plot
+
+Let's create a scatter plot to visualize the relationship between GDP and Unemployment Rate.
+
+```{r}
+library(ggplot2)
+
+# Sample data
+economic_data <- data.frame(
+  Year = c(2010, 2011, 2012, 2013, 2014),
+  GDP = c(1200, 1300, 1350, 1400, 1500),
+  UnemploymentRate = c(5.2, 5.0, 4.8, 4.5, 4.2)
+)
+
+# Create a scatter plot using ggplot2
+ggplot(data = economic_data, aes(x = GDP, y = UnemploymentRate)) +
+  geom_point() +
+  labs(title = "Scatter Plot of GDP vs. Unemployment Rate",
+       x = "GDP", y = "Unemployment Rate")
+```
+
+```{r}
+# Sample data
+data <- data.frame(
+  Year = c(2010, 2011, 2012, 2013, 2014),
+  InflationRate = c(2.2, 2.0, 4.0, 4.7, 4.3),
+  UnemploymentRate = c(5.2, 5.0, 4.8, 4.5, 3.2)
+)
+
+# Grouped bar plot using ggplot2
+ggplot(data = data, aes(x = Year)) +
+  geom_bar(aes(y = InflationRate, fill = "Inflation Rate"), stat = "identity", position = "dodge") +
+  geom_bar(aes(y = UnemploymentRate, fill = "Unemployment Rate"), stat = "identity", position = "dodge") +
+  labs(title = "Comparison of Inflation Rate and Unemployment Rate by Year",
+       x = "Year", y = "Value") +
+  scale_fill_manual(values = c("Inflation Rate" = "blue", "Unemployment Rate" = "red")) +
+  theme_minimal()
+```
+
+```{r}
+# Density plot using ggplot2
+ggplot(data = economic_data, aes(x = GDP, fill = "GDP")) +
+  geom_density(alpha = 0.5) +
+  labs(title = "Density Plot of GDP Distribution",
+       x = "GDP", y = "Density") +
+  scale_fill_manual(values = c("GDP" = "green")) +
+  theme_minimal()
+```
+
+**Exercise:** Research and implement two plots using ggplot2 that we have not covered in this class. (10 mins)
+
+### Benefits of Using ggplot2 vs Native R Commands
+
+Using ggplot2 for visualization offers several benefits over native R commands like barplot() or plot():
+
+- **Layered Approach:** ggplot2 follows a layered approach to building plots, allowing you to easily customize and modify each aspect of the plot individually.
+
+- **Consistent Syntax:** The syntax for creating different types of plots is consistent, making it easier to transition from one plot type to another.
+
+- **Customization:** ggplot2 provides a wide range of options for customizing plots, such as themes, color scales, and annotations.
+
+- **Complex Visualizations:** ggplot2 enables you to create complex visualizations by combining different geoms, facets, and layers.
+
+- **Publication-Quality Graphics:** The default output of ggplot2 is designed to produce high-quality graphics suitable for presentations and publications.
+
+***Reference: Wickham, H. (2016). ggplot2: Elegant Graphics for Data Analysis. Springer. ISBN 978-3-319-24277-4.***
+
+As you can see, ggplot2 offers a more flexible and powerful way to create advanced visualizations compared to native R commands. It empowers you to create visually appealing and informative plots for your economic data analysis.
+
+# Data Wrangling with dplyr - Part I
+
+[dplyr](https://dplyr.tidyverse.org/) is a package that provides tools for data manipulation and transformation. It includes functions that make data wrangling tasks intuitive and efficient.
+
+## Selecting Columns
+
+Use the select() function to choose specific columns from a data frame.
+
+```{r}
+library(dplyr)
+
+# Sample data
+economic_data <- data.frame(
+  Year = c(2010, 2011, 2012, 2013, 2014),
+  GDP = c(1200, 1300, 1350, 1400, 1500),
+  UnemploymentRate = c(5.2, 5.0, 4.8, 4.5, 4.2)
+)
+
+# Select specific columns
+selected_data <- select(economic_data, Year, GDP) # UnemploymentRate
+print(selected_data)
+```
+## Filtering Rows
+
+Use the filter() function to extract rows that meet specific conditions.
+```{r}
+# Filter rows based on conditions
+filtered_data <- filter(economic_data, Year >= 2010 & Year <= 2013)
+print(filtered_data)
+```
+
+## Mutating Data
+
+Use the mutate() function to create new variables or modify existing ones.
+
+```{r}
+# Create a new variable
+mutated_data <- mutate(economic_data, GDP_Millions = GDP / 1000)
+print(mutated_data)
+```
+
+**Exercise:** Create a new dataset of economic data with variables of your choosing. It should include Year, GDP and at least 2 more economic indicators. Then, apply select(), filter(), and mutate() to tinker with your data. Finally, create a new variable that represents the GDP per capita by dividing GDP by the Population. (7 mins)
+
+**Exercise:** Research and implement two dplyr functions that we have not covered in this lecture.  

@@ -1,0 +1,3 @@
+"0","# Create a bar plot"
+"0","categories <- c(""Category A"", ""Category B"", ""Category A"", ""Category C"", ""Category B"")"
+"0","barplot(table(categories), main = ""Categorical Variable Distribution"")"

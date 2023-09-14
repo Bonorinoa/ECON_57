@@ -1,0 +1,173 @@
+---
+title: "ECON 57: Economic Statistics - R Notebook"
+output: html_notebook
+---
+
+
+# Reading and Writing Files in R
+
+In this section, we will explore how to read and write various types of files in R, including CSV and Excel files, which are commonly used in economic data analysis.
+
+## Reading CSV Files
+
+To read a CSV file in R, we can use the read.csv() function. Let's assume we have a CSV file named "economic_data.csv" containing economic data.
+
+```{r}
+# Reading a CSV file
+data <- read.csv(file.choose())
+data
+```
+
+## Writing CSV Files
+
+To write a data frame to a CSV file, we can use the write.csv() function.
+
+```{r}
+# Writing a data frame to a CSV file
+write.csv(new_data, "updated_economic_data.csv", row.names = FALSE)
+
+```
+
+## Reading Excel Files
+
+To read an Excel file in R, we need the readxl package. Install it using install.packages("readxl") if not already installed.
+
+```{r}
+# install.packages("readxl")
+# Load the readxl package
+library(readxl)
+
+# Reading an Excel file
+economic_data_excel <- read_excel(file.choose(), sheet = "Sheet1")
+
+```
+
+## Writing Excel Files
+
+To write a data frame to an Excel file, we can use the openxlsx package. Install it using install.packages("openxlsx") if not already installed.
+
+```{r}
+# install.packages("openxlsx")
+# Load the openxlsx package
+library(openxlsx)
+
+# Create a new Excel workbook
+wb <- createWorkbook()
+
+# Add a data frame to the workbook
+addWorksheet(wb, "EconomicData")
+writeData(wb, "EconomicData", economic_data)
+
+# Save the workbook
+saveWorkbook(wb, "economic_data_updated.xlsx")
+
+```
+
+**Exercise:** Download some economic data from a reputable source as a CSV file into your computer. Then, read the CSV file and print the data. Compute summary/descriptive statistics. Finally, write the data to an Excel file with appropriate formatting
+
+# Two-way Entry Table in R
+
+In economic analysis, two-way tables (also known as contingency tables) are used to display the frequency distribution of two categorical variables.
+ 
+## Creating Two-way Tables
+
+Let's consider a scenario where we have surveyed individuals regarding their employment status and education level.
+
+```{r}
+# Create a data frame
+survey_data <- data.frame(
+  Employment = c("Employed", "Unemployed", "Employed", "Unemployed", "Employed"),
+  Education = c("High School", "College", "College", "High School", "Graduate")
+)
+
+# Create a two-way table
+table_data <- table(survey_data$Employment, survey_data$Education)
+print(table_data)
+
+```
+
+## Visualizing Two-way Tables
+
+We can create a bar plot to visualize the two-way table using the barplot() function.
+
+```{r}
+# Create a bar plot
+barplot(table_data, beside = TRUE, legend = TRUE,
+        col = c("lightblue", "lightgreen", "lightyellow"),
+        names.arg = c("College", "Graduate", "High School"),
+        main = "Employment Status by Education Level")
+
+```
+
+**Exercise:** Create a two-way table and a stacked bar plot to analyze the relationship between transportation mode (car, bike, walk) and income level (low, medium, high) based on survey data.
+
+# Covariance and Correlation in R
+
+Covariance and correlation are essential concepts in statistics that help us understand the relationship between two continuous variables.
+
+## Calculating Covariance
+
+Covariance measures the degree to which two variables change together.
+
+```{r}
+# Sample data: Quarterly GDP and Unemployment Rate
+GDP <- c(1200, 1300, 1350, 1400, 1500)
+UnemploymentRate <- c(5.2, 5.0, 4.8, 4.5, 4.2)
+
+# Calculate means
+mean_GDP <- mean(GDP)
+mean_UnemploymentRate <- mean(UnemploymentRate)
+
+# Calculate covariance using the formula
+n <- length(GDP)
+covariance <- sum((GDP - mean_GDP) * (UnemploymentRate - mean_UnemploymentRate)) / (n - 1)
+print(covariance)
+```
+
+```{r}
+# But R makes it real easy to do this
+covariance <- cov(GDP, UnemploymentRate)
+print(covariance)
+
+```
+
+
+```{r}
+# todo: download csv file with economic data
+economic_data <- read.csv(file.choose())
+
+# Calculate covariance between GDP and Unemployment Rate
+covariance <- cov(economic_data$GDP, economic_data$UnemploymentRate)
+print(covariance)
+
+```
+
+## Calculating Correlation
+
+Correlation quantifies the strength and direction of the linear relationship between two variables.
+
+```{r}
+# Calculate standard deviations
+sd_GDP <- sd(GDP)
+sd_UnemploymentRate <- sd(UnemploymentRate)
+
+# Calculate correlation using the formula
+correlation <- covariance / (sd_GDP * sd_UnemploymentRate)
+print(correlation)
+```
+
+```{r}
+# In R...
+correlation <- cor(GDP, UnemploymentRate)
+print(correlation)
+```
+
+```{r}
+# Calculate correlation between GDP and Unemployment Rate
+correlation <- cor(economic_data$GDP, economic_data$UnemploymentRate)
+print(correlation)
+
+```
+
+**Exercise:** Initialize two vectors representing data of your liking, compute the covariance and correlation of these vectors. 
+

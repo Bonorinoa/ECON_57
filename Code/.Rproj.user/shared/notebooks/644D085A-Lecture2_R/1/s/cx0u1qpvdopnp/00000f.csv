@@ -1,0 +1,5 @@
+"0","# Calculate mean, median, and standard deviation"
+"0","mean_height <- mean(heights[2:6])"
+"0","median_height <- median(heights)"
+"0","sd_height <- sd(heights)"
+"0",""

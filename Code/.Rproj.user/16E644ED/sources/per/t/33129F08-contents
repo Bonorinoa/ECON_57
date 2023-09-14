@@ -1,0 +1,114 @@
+---
+title: "R Notebook"
+output: html_notebook
+---
+
+# ECON 57: Introduction to Statistics and Probability for Economists with R Programming
+
+## Lecture 1: Introduction to R Programming - Part I
+
+### Goals
+1. Provide working code for reference.
+2. Illustrate concepts with economics-related examples.
+3. Include exercises for in-class practice.
+
+### Contents
+
+#### Installation and Setup
+- Installing R, RStudio, and Markdown.
+- Running an R Notebook.
+
+#### Basics of R Programming
+##### Variables and Data Types
+
+###### Defining Variables
+In R, you can assign values to variables using the assignment operator `<-`. Here are examples:
+
+```{r}
+x <- 5
+y <- 2.5
+name <- "Economist"
+is_student <- TRUE
+```
+
+###### Data Types
+
+R supports various data types:
+
+**Numeric**: Includes both integers and floating-point numbers.
+
+**Character**: Represents strings of text.
+
+**Logical**: Represents TRUE or FALSE values.
+
+```{r}
+# Numeric variables
+age <- 30
+income <- 50000.75
+
+# Character variable
+country <- "Econland"
+
+# Logical variable
+is_employed <- TRUE
+```
+
+###### Vector
+
+Vector is the simplest data structure we can implement in R. They are sequences of elements of the same data type.
+
+```{r}
+# Numeric vector
+prices <- c(10.5, 20.3, 15.2, 12.7)
+
+# Character vector
+fruits <- c("apple", "banana", "orange", "grape")
+
+# Logical vector
+bool_values <- c(TRUE, FALSE, TRUE, TRUE)
+
+```
+
+####### Indexing Vectors
+
+You can access elements in a vector using indexing:
+
+```{r}
+# Accessing second element of prices vector
+second_price <- prices[2]
+
+# Accessing first three elements of fruits vector
+first_three_fruits <- fruits[1:3]
+```
+
+##### Conditionals
+
+```{r}
+# If statement
+if (x > y) {
+  print("x is greater than y")
+} else {
+  print("x is not greater than y")
+}
+
+# Economics example: Buying decision
+price <- 15
+budget <- 20
+
+if (price <= budget) {
+  print("Affordable")
+} else {
+  print("Too expensive")
+}
+
+```
+
+##### Exercises
+
+1. Create a variable age and assign your age to it. Print a message saying "You're young!" if your age is less than 30, otherwise, print "You're wise!"
+
+2. Given a vector of GDP growth rates gdp_growth = c(0.02, -0.01, 0.04, -0.005, 0.03), calculate and print the average growth rate.
+
+3. Write a conditional statement to check if a given number num is positive, negative, or zero. Print an appropriate message.
+
+----

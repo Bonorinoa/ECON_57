@@ -1,0 +1,334 @@
+---
+title: "ECON 57: Economic Statistics - R Notebook 6"
+output: html_notebook
+---
+
+# Set Theory in R
+
+## Introduction to Set Theory
+
+Set theory is a fundamental branch of mathematics that deals with the study of sets, which are collections of distinct elements.In programming languages, sets are chartacteristic for being immutable. That is, you cannot add or take out elements from this set (like we can do with vectors or lists). In this notebook, we'll explore various set operations and their implementation in R.
+
+### Creating Sets in R
+
+We can use vectors with unique elements to create sets in r. Duplicate elements will be ignored by set operations.
+
+Now, let's create sets A and B:
+
+```{r}
+# Create sets A and B
+A <- c(1, 2, 3, 4, 5)
+B <- c(3, 4, 5, 6, 7)
+```
+
+### Set Operations
+
+#### Union
+
+The union of two sets A and B, denoted as A ∪ B, contains all the elements that are in either set A or set B or both. In R, you can use the union() function to perform this operation:
+
+```{r}
+# Calculate the union of sets A and B
+union_result <- union(A, B)
+union_result
+```
+
+#### Intersection
+
+The intersection of two sets A and B, denoted as A ∩ B, contains all the elements that are present in both sets A and B. In R, you can use the intersect() function:
+
+```{r}
+# Calculate the intersection of sets A and B
+intersect_result <- intersect(A, B)
+intersect_result
+```
+
+#### Difference
+
+The difference between two sets A and B, denoted as A - B, contains all the elements that are in set A but not in set B. In R, you can use the setdiff() function:
+
+```{r}
+# Calculate the difference between sets A and B
+difference_result <- setdiff(A, B)
+difference_result
+```
+
+#### Equivalent sets
+
+Two sets are said to be equal if they contain exactly the same elements. 
+
+```{r}
+is_equal <- setequal(A,B)
+print(paste("The sets are equal:", is_equal))
+
+A2 <- c(1,2,3,4)
+B2 <- c(1,2,3,4)
+
+print(paste("The sets are equal:", setequal(A2, B2)))
+```
+
+#### Set membership
+
+We have two ways of checking if a given set belongs, or is a subset, of another set.
+
+```{r}
+# using is.element()
+belongs <- is.element(4, A2)
+belongs
+```
+
+```{r}
+# using %in% and conditionals
+num <- 4
+if (num %in% A2)
+  {
+  print("It belongs")
+  } else {
+  print("It does not belong")
+    }
+```
+
+```{r}
+# sample() let's us construct a random sample of size `size` taken from vector `x`. The replace argument allows us to specify if we want to sample with or without replacement.
+# sort() takes in a vector and sorts it 
+x <- c(sort(sample(x=1:20, size=9, replace=FALSE)), decreasing = FALSE, NA)
+y <- c(sort(sample(3:23, 7)), decreasing = TRUE, NA)
+
+print(paste("x =", x)) # you wil get different values each time you run this cell
+print(paste("y =", y))
+
+belongs <- is.element(x, y) # or %in%
+print(belongs)
+```
+
+### Exercises
+
+**Exercise 1:**
+
+Create two sets C and D with elements 2, 4, 6, 8, 10 and 1, 3, 5, 7, 9 respectively. Perform the following operations:
+
+- Calculate the union of C and D.
+- Calculate the intersection of C and D.
+- Calculate the difference between C and D.
+
+```{r}
+# Create sets C and D
+C <- set(2, 4, 6, 8, 10)
+D <- set(1, 3, 5, 7, 9)
+
+# Calculate union, intersection, and difference
+union_CD <- union(C, D)
+intersect_CD <- intersect(C, D)
+difference_CD <- setdiff(C, D)
+
+print(paste("Union ->", union_CD))
+print(paste("Intersection ->", intersect_CD))
+print(paste("Difference/Complement ->", difference_CD))
+
+```
+
+
+**Exercise 2:**
+
+Given the sets A, B, and C:
+
+```{r}
+A <- set(1, 2, 3)
+B <- set(3, 4, 5)
+C <- set(2, 5, 6)
+```
+
+Find (A ∪ B) ∩ C.
+
+```{r}
+# Calculate (A ∪ B) ∩ C
+result <- intersect(union(A, B), C)
+result
+```
+
+# Random experiments, events, and sampling
+
+In the realm of statistics and probability, random experiments are processes or events whose outcomes cannot be predicted with certainty, but they follow a certain probability distribution. Events, on the other hand, are subsets of the sample space of a random experiment. Sampling involves selecting a subset of elements from a larger population to make inferences about the population.
+
+## Random Experiments and Sample Spaces
+
+A random experiment is an action, process, or phenomenon that results in various possible outcomes, but the actual outcome is uncertain. The set of all possible outcomes of a random experiment is called the sample space, often denoted by the symbol *S*. Each individual outcome is called a sample point.
+
+For example, rolling a six-sided die can be considered a random experiment. The sample space for this experiment is *S={1,2,3,4,5,6}*, where each number represents one of the possible outcomes.
+
+```{r}
+# Sample space for rolling a six-sided die
+sample_space <- 1:6
+sample_space
+
+```
+
+## Events and Event Spaces
+An event is a subset of the sample space, representing a collection of possible outcomes of a random experiment. Events are usually denoted by capital letters (e.g., A, B, C).
+
+For instance, in the die rolling experiment, A={2,4,6} represents the event of rolling an even number. Similarly, B={1,3,5} represents the event of rolling an odd number.
+
+```{r}
+# Defining events A and B for a die rolling experiment
+A <- c(2, 4, 6) # Event of rolling an even number
+B <- c(1, 3, 5) # Event of rolling an odd number
+A
+B
+
+```
+
+## Sampling from a Population
+
+Sampling involves selecting a subset of individuals or items from a larger population to make inferences about the population as a whole. This is done to avoid the time, cost, and effort required to examine the entire population.
+
+**Example: Generating Random Samples Using rnorm**
+
+In R, you can generate random samples from various probability distributions using functions like rnorm (for the normal distribution), runif (for the uniform distribution), and more.
+
+Let's generate a random sample of 50 observations from a normal distribution with a mean of 0 and a standard deviation of 1:
+
+```{r}
+# Generate a random sample of 50 observations from a normal distribution
+sample_size <- 50
+mean <- 0
+sd <- 1
+random_sample <- rnorm(n = sample_size, mean = mean, sd = sd)
+
+random_sample
+
+```
+
+**Exercise 1:** Create a dataset containing the ages of 500 people sampled from a normal distribution. Explain how you would perform simple random sampling in R to select a sample of 50 individuals from this dataset. Provide the code as well.
+
+```{r}
+ages_data <- rnorm(500, 0, 1)
+# Assuming ages_data is the dataset containing ages of 500 people
+sample_size <- 50
+sample_indices <- sample(1:500, size = sample_size) # sample 50 random indices from 1 to 500 to select your 50 ages at random
+sample_ages <- ages_data[sample_indices]
+
+sample_ages
+```
+
+**Exercise 2:** You are conducting a survey in a city with four neighborhoods: A, B, C, and D. The population distribution of the neighborhoods is as follows:
+
+Neighborhood A: 1200 residents
+Neighborhood B: 800 residents
+Neighborhood C: 1500 residents
+Neighborhood D: 1000 residents
+
+You want to select a random sample of 100 residents for your survey. Explain how you would perform simple random sampling (all elements have equal probability) using R, and provide the code.
+
+```{r}
+# Population sizes
+pop_size <- c(A = 1200, B = 800, C = 1500, D = 1000)
+
+# Simple random sampling
+sample_size <- 100
+sample_neighborhoods <- sample(names(pop_size), size = sample_size, prob = pop_size / sum(pop_size), replace = TRUE)
+
+sample_neighborhoods
+
+```
+
+# Counting
+
+Counting is a fundamental concept in mathematics and statistics that is often used to quantify the number of possibilities or outcomes in various scenarios. In R programming, you can perform counting operations using different techniques, including the multiplication rule, permutations, and combinations.
+
+## The Multiplication Rule
+
+The multiplication rule is a fundamental principle used to calculate the total number of outcomes for a sequence of independent events. It states that if there are n1 ways to perform the first event and n2 ways to perform the second event, then there are a total of n1 x n2 ways to perform both events.
+
+Let's consider an example:
+
+**Example: Counting Password Combinations**
+
+Suppose you are creating a password using two characters: one uppercase letter and one digit. If there are 26 possible uppercase letters and 10 possible digits, how many unique password combinations can you create?
+
+```{r}
+# Total number of uppercase letters and digits
+n_uppercase <- 26
+n_digits <- 10
+
+# Total number of password combinations using the multiplication rule
+total_combinations <- n_uppercase * n_digits
+total_combinations
+
+```
+
+## Permutations
+
+Permutations refer to the arrangement of elements in a specific order. The number of permutations of n distinct objects taken r at a time is denoted as P(n, r) and is calculated using the formula:
+
+P(n, r) = n! / (n - r)!
+
+where n! represents the factorial of n.
+
+**Example: Arranging Books on a Shelf**
+
+You have 5 books, and you want to arrange 3 of them on a shelf. How many different arrangements are possible?
+
+```{r}
+# Number of books and positions
+n_books <- 5
+r_positions <- 3
+
+# Calculate the number of permutations
+num_permutations <- factorial(n_books) / factorial(n_books - r_positions)
+num_permutations
+
+```
+
+## Combinations
+
+Combinations refer to the selection of elements without considering their order. The number of combinations of n distinct objects taken r at a time is denoted as C(n, r) and is calculated using the formula:
+
+C(n, r) = n! / (r! * (n - r)!)
+
+**Example: Choosing Contest Winners**
+
+In a contest with 10 participants, you want to select 3 winners. How many different combinations of winners are possible?
+
+```{r}
+# Number of participants and winners
+n_participants <- 10
+r_winners <- 3
+
+# Calculate the number of combinations
+num_combinations <- factorial(n_participants) / (factorial(r_winners) * factorial(n_participants - r_winners))
+num_combinations
+
+```
+
+**Exercise 1: Permutations of Colors**
+
+You have 4 different color tiles: red, blue, green, and yellow. You want to arrange 2 tiles in a row. How many different color arrangements are possible?
+
+```{r}
+# Number of colors and positions
+n_colors <- 4
+r_positions <- 2
+
+# Calculate the number of permutations
+num_color_permutations <- factorial(n_colors) / factorial(n_colors - r_positions)
+num_color_permutations
+
+```
+
+**Exercise 2: Combinations of Fruits**
+
+In a fruit basket, you have 5 apples, 3 bananas, and 2 oranges. You want to select 2 pieces of fruit for a snack. How many different combinations of fruit are possible?
+
+```{r}
+# Number of apples, bananas, oranges, and selections
+n_apples <- 5
+n_bananas <- 3
+n_oranges <- 2
+r_selections <- 2
+
+# Calculate the number of combinations
+num_fruit_combinations <- factorial(n_apples + n_bananas + n_oranges) / (factorial(r_selections) * factorial(n_apples + n_bananas + n_oranges - r_selections))
+num_fruit_combinations
+
+```
+

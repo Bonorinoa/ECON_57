@@ -1,0 +1,2 @@
+"0","# Create a box plot"
+"0","boxplot(heights, main = ""Height Box Plot"")"

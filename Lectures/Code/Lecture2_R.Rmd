@@ -1,0 +1,320 @@
+---
+title: "ECON 57: Introduction to Statistics and Probability for Economists with R Programming"
+output: html_notebook
+---
+
+## Lecture 2: Introduction to R Programming - Part II
+
+### Contents
+
+Matrices, Frequency Tables, Data Frames, Descriptive Statistics
+
+#### Matrices
+
+A matrix is a two-dimensional collection of elements of the same data type. You can create matrices using the `matrix()` function on a vector. matrix() needs to be told in how many rows and columns the vector elements are to be organized. The length (number of elements) of rows must be equal, as well as the length of columns.
+
+```{r}
+# Create a 2x3 matrix
+mat <- matrix(c(1, 2, 3, 4, 5, 6), 
+              nrow = 2, ncol = 3) # nrow * ncol = # of observations
+print(mat)
+```
+
+```{r}
+# Create a matrix with sales data and named dimensions
+sales_matrix <- matrix(c(100, 150, 200, 80, 120, 160), 
+                       nrow = 2, byrow = TRUE,
+                       dimnames = list(c("Month1", "Month2"),
+                                        c("ProductA", "ProductB", "ProductC")))
+sales_matrix
+```
+
+```{r}
+# alternative way of setting row and column names
+sales_matrix <- matrix(c(100, 150, 200, 80, 120, 160), 
+                       nrow = 3, byrow = TRUE)
+
+rownames(sales_matrix) <- c("1", "2", "3")
+colnames(sales_matrix) <- c("ProdA", "ProdB")
+```
+
+
+**Exercise 1:** Create a matrix price_matrix representing the prices of two products over the same three months. The prices are 10, 15, and 20 for Product A and 5, 8, and 12 for Product B. Then, sum the sales and price matrices to compute the total sales matrix. Hint: Use the matrix() function.
+
+```{r}
+price_matrix <- matrix(c(10,15,20,5,8,12), 
+                       ncol=2, byrow=F,
+                       dimnames = list(c("1", "2", "3"),
+                                       c("Product A", "Product B")))
+
+# matrix addition
+sales_matrix + price_matrix
+```
+
+**Exercise 2:** Calculate the total revenue matrix.
+
+```{r}
+total_revenue <- sales_matrix * price_matrix 
+total_revenue
+```
+
+#### Tables
+
+A table is a special kind of matrix used for data summaries, these are similar to matrices but with some additional features for data analysis. Tables in R are represented using the data.frame class, which allows you to store data with different types (e.g., numeric, character). Let's create a table for unemployment rates over four quarters.
+
+```{r}
+# Create a data frame for unemployment rates
+quarters <- c("Q1", "Q2", "Q3", "Q4")
+unemployment_rates <- c(5.2, 5.5, 5.7, 5.9)
+unemployment_data <- data.frame(Quarter = quarters, 
+                                Rate = unemployment_rates)
+unemployment_data
+
+```
+
+You can access specific elements in a matrix or table using row and column indices.
+
+```{r}
+# Access a specific element in the sales_matrix
+sales_productA_month2 <- sales_matrix[2, "ProdA"]
+sales_productA_month2
+```
+
+**Exercise 3:** Access the unemployment rate for the third quarter from the unemployment_data table.
+
+```{r}
+unemployment_data[3, "Rate"]
+unemployment_data[, "Rate"][3]
+```
+
+#### Frequency Tables
+
+We'll use the table() function to create frequency tables.
+
+```{r}
+# Creating a frequency table
+data <- c("BMW", "BMW", "KIA", "Toyota")
+data.frame(Cars = data)
+
+freq_table <- table(data)
+print(freq_table)
+```
+
+**Exercise 4:** Given a dataset of student grades grades = c("A", "B", "B", "C", "A", "A", "B"), create a frequency table using the table() function.
+
+```{r}
+grades = c("A", "B", "B", "C", "A", "A", "B")
+table(grades)
+```
+
+#### Frequency Distributions
+
+##### Univariate Numerical Frequency Distributions
+
+Univariate numerical frequency distributions are used to summarize the distribution of a single numerical variable. There are two types: discrete and continuous.
+
+###### Discrete Frequency Distribution
+
+A discrete frequency distribution is used when the data consists of distinct, separate values. Let's consider a dataset of exam scores:
+
+```{r}
+# Dataset of exam scores
+exam_scores <- c(85, 92, 78, 90, 85, 88, 78, 92, 92, 90)
+
+# Create a discrete frequency table
+freq_table_discrete <- table(exam_scores)
+print(freq_table_discrete)
+
+# Create a histogram for the exam scores
+hist(exam_scores, main = "Histogram of Exam Scores",
+     xlab = "Exam Scores", ylab = "Frequency", 
+     col = "salmon", border = "black")
+
+```
+
+###### Continuous Frequency Distribution
+
+A continuous frequency distribution is used for variables that can take any value within a range. Let's consider a dataset of weights of randomly selected fruits in grams:
+
+```{r}
+# Dataset of fruit weights (in grams)
+fruit_weights <- c(120, 150, 140, 170, 180, 135, 160, 150, 175, 130)
+
+# Choose the number of bins (intervals) for the histogram
+num_bins <- 4
+
+# Create a histogram for the fruit weights
+hist(fruit_weights, breaks = num_bins,
+     main = "Histogram of Fruit Weights",
+     xlab = "Fruit Weights (grams)", ylab = "Frequency", 
+     col = "salmon", border = "black")
+```
+
+```{r}
+# Calculate class width for the continuous frequency distribution
+data_range <- max(fruit_weights) - min(fruit_weights)
+class_width <- data_range / num_bins
+cat("Class Width:", class_width, "grams\n")
+
+# Calculate frequency table for continuous distribution
+freq_table_continuous <- cut(fruit_weights, breaks = num_bins, 
+                             right = TRUE, include.lowest = TRUE)
+print(table(freq_table_continuous))
+
+```
+
+```{r}
+?cut
+```
+
+
+For continuous distributions, we created a histogram to visualize the distribution of fruit weights and calculated the class width to determine the bin size. We also generated a frequency table using the cut() function to categorize the data into intervals.
+
+#### Descriptive Statistics
+
+##### Mean and Median
+
+The mean and median are measures of central tendency that provide insights into the typical value of a dataset. While both values indicate the center of the data, they can differ when the data is skewed or contains outliers. The median is less sensitive to outliers.
+
+```{r}
+# Calculate mean and median
+income <- c(40000, 40000, 45000, 52000, 60000, 67000, 150000)
+mean_income <- mean(income)
+median_income <- median(income)
+
+print(paste("Mean Income:", mean_income))
+print(paste("Median Income:", median_income))
+```
+
+In this example, we calculated the mean and median of a dataset representing different income levels. The mean is the arithmetic average of the values, while the median is the middle value when the data is sorted. If the dataset has an even number of values, the median is the average of the two middle values.
+
+##### Quantiles
+
+Quantiles divide a dataset into intervals, helping us understand how values are distributed. The median is the 50th percentile, but other percentiles (e.g., quartiles) can also be calculated.
+
+```{r}
+# Calculate quartiles
+quartiles <- quantile(income, probs = c(0.25, 0.5, 0.75))
+print(paste("Income Quartiles:", quartiles)) # note vectorization
+```
+
+##### Mode
+
+The mode is the value that appears most frequently in a dataset.
+
+```{r}
+# Calculate mode
+income_mode <- as.numeric(names(sort(table(income), decreasing = TRUE)[1]))
+print(paste("Income mode:", income_mode))
+```
+
+#### Measures of dispersion
+
+These measures provide insights into the variability of data points.
+
+##### Variability or Dispersion
+
+Variability refers to how spread out the data values are. A larger variability indicates greater differences among the values.
+
+```{r}
+# Calculate range
+data_range <- max(income) - min(income)
+data_range
+```
+
+##### Indices of Dispersion
+
+Indices of dispersion, such as variance and standard deviation, quantify the spread of data points around the mean.
+
+```{r}
+# Calculate variance and standard deviation
+var_income <- var(income, na.rm=T)
+sd_income <- sd(income, na.rm=T)
+
+print(paste("Income variance:", var_income))
+print(paste("Income standard deviation:", sd_income))
+```
+
+```{r}
+income <- c(income, NA)
+
+var(income, na.rm=T)
+```
+
+
+##### Coefficient of Variation
+
+The coefficient of variation (CV) compares the standard deviation to the mean, providing a relative measure of variability.
+
+```{r}
+# Calculate coefficient of variation
+cv_income <- (sd_income / mean_income) * 100
+print(paste("Income CV:", cv_income))
+```
+
+##### Skewness and Kurtosis
+
+Skewness measures the asymmetry of the distribution, while kurtosis indicates the degree of peakedness or flatness compared to a normal distribution.
+
+```{r}
+#install.packages("e1071")
+library(e1071)  # Make sure e1071 package is installed
+```
+
+
+```{r}
+# Calculate skewness and kurtosis
+skewness_income <- skewness(income, na.rm = T)
+kurtosis_income <- kurtosis(income, na.rm=T)
+
+print(paste("Income skewness:", skewness_income))
+print(paste("Income kurtosis", kurtosis_income))
+```
+
+**Exercise 5:** Calculate the quartiles, mode, range, variance, and other measures for a different dataset. Analyze how these measures provide insights into the characteristics of the data. How does the mean and median of your data distribution change as the standard deviation changes?
+
+```{r}
+# Create a dataset with a normal distribution
+set.seed(123)  # Setting seed for reproducibility
+data <- rnorm(1000, mean = 50, sd = 10)  # Mean = 50, Standard Deviation = 10
+
+# Calculate quartiles
+q1 <- quantile(data, 0.25)
+q3 <- quantile(data, 0.75)
+
+# Calculate mode
+mode <- as.numeric(names(sort(table(data), decreasing = TRUE)[1]))
+
+# Calculate range
+range_data <- range(data)
+
+# Calculate variance
+variance <- var(data)
+
+# Calculate mean and median for different standard deviations
+std_dev_values <- c(5, 10, 15, 50, 100)
+
+result <- data.frame(StandardDeviation = std_dev_values)
+
+result["Mean"] <- sapply(std_dev_values, function(sd_value) {
+  data <- rnorm(1000, mean = 50, sd = sd_value)
+  return(mean(data))
+})
+result$Median <- sapply(std_dev_values, function(sd_value) {
+  data <- rnorm(1000, mean = 50, sd = sd_value)
+  return(median(data))
+})
+
+# Display the results
+cat("Quartile 1:", q1, "\n")
+cat("Quartile 3:", q3, "\n")
+cat("Mode:", mode, "\n")
+cat("Range:", range_data, "\n")
+cat("Variance:", variance, "\n")
+cat("Mean and Median for Different Standard Deviations:\n")
+print(result)
+
+```
+
+
+

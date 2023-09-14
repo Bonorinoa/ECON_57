@@ -1,0 +1,213 @@
+---
+title: "R Notebook"
+output: html_notebook
+---
+
+# ECON 57: Introduction to Statistics and Probability for Economists with R Programming
+
+## Lecture 2: Introduction to R Programming - Part II
+
+
+### Contents
+
+#### Matrices and Tables
+
+##### Matrices
+A matrix is a two-dimensional collection of elements of the same data type. You can create matrices using the `matrix()` function.
+
+```{r}
+# Create a 2x3 matrix
+mat <- matrix(c(1, 2, 3, 4, 5, 6), nrow = 2, ncol = 3)
+print(mat)
+```
+
+##### Tables
+
+A table is a special kind of matrix used for data summaries. We'll use the table() function to create frequency tables.
+
+```{r}
+# Creating a frequency table
+data <- c("A", "B", "A", "C", "B", "A")
+freq_table <- table(data)
+print(freq_table)
+```
+
+#### Exercises
+
+1. Create a 3x2 matrix named econ_matrix with your favorite economic indicators (e.g., GDP, inflation rate, unemployment rate). Print the matrix.
+
+2. Given a dataset of student grades grades = c("A", "B", "B", "C", "A", "A", "B"), create a frequency table using the table() function.
+
+#### Frequency Distributions
+
+##### Univariate Numerical Frequency Distributions
+
+Univariate numerical frequency distributions are used to summarize the distribution of a single numerical variable. There are two types: discrete and continuous.
+
+###### Discrete Frequency Distribution
+
+A discrete frequency distribution is used when the data consists of distinct, separate values. Let's consider a dataset of exam scores:
+
+```{r}
+# Dataset of exam scores
+exam_scores <- c(85, 92, 78, 90, 85, 88, 78, 92, 92, 90)
+
+# Create a discrete frequency table
+freq_table_discrete <- table(exam_scores)
+print(freq_table_discrete)
+```
+
+###### Continuous Frequency Distribution
+
+A continuous frequency distribution is used for variables that can take any value within a range. Let's consider a dataset of heights:
+
+```{r}
+# Dataset of heights in inches
+heights <- c(64, 69, 72, 67, 71, 70, 68, 66, 70, 68)
+
+print(heights)
+```
+
+
+##### Histograms
+
+Histograms are used to visualize the distribution of a continuous variable.
+
+```{r}
+# Create a histogram
+hist(heights, main = "Height Distribution", xlab = "Height (inches)")
+```
+
+##### Bar Plots
+
+Bar plots display the distribution of categorical variables.
+
+```{r}
+# Create a bar plot
+categories <- c("Category A", "Category B", "Category A", "Category C", "Category B")
+barplot(table(categories), main = "Categorical Variable Distribution")
+```
+
+##### Box Plots
+
+A box plot shows the distribution of a dataset and identifies outliers
+
+```{r}
+# Create a box plot
+boxplot(heights, main = "Height Box Plot")
+```
+
+##### Density Plots
+
+A density plot shows the estimated probability density function of the data.
+
+```{r}
+# Create a density plot
+density_plot <- density(heights)
+plot(density_plot, main = "Height Density Plot")
+```
+
+#### Exercises
+
+1. Generate random income data for 100 individuals using the rnorm() function and create a histogram.
+
+2. Given a dataset of students' favorite subjects subjects = c("Math", "Science", "Art", "Math", "History"), create a bar plot to visualize the distribution.
+
+#### Descriptive Statistics
+
+##### Mean and Median
+
+The mean and median are measures of central tendency.
+
+```{r}
+# Calculate mean and median
+income <- c(40000, 45000, 52000, 60000, 67000)
+mean_income <- mean(income)
+median_income <- median(income)
+```
+
+##### Standard Deviation
+
+The standard deviation measures the dispersion of data points from the mean.
+
+```{r}
+# Calculate standard deviation
+sd_income <- sd(income)
+```
+
+#### Exercises
+
+1. Calculate the mean and median of a set of 10 exam scores: exam_scores = c(75, 80, 92, 68, 87, 95, 78, 83, 88, 72).
+
+2. Compute the standard deviation of a dataset of ages: ages = c(25, 30, 28, 22, 35, 40).
+
+#### Using Tables and Indexing for Descriptive Statistics
+
+The summary() function provides a summary of key statistics.
+
+```{r}
+# Summary of exam scores
+summary(exam_scores)
+```
+
+##### Indexing and Calculating Descriptive Statistics
+
+You can use indexing and functions like mean(), median(), and sd() to compute descriptive statistics.
+
+```{r}
+# Calculate mean, median, and standard deviation
+mean_height <- mean(heights[2:6])
+median_height <- median(heights)
+sd_height <- sd(heights)
+
+```
+
+#### Functions and Loops
+
+##### Functions in R
+
+Functions are blocks of code that can be reused for specific tasks. 
+
+```{r}
+# Define a function
+calculate_mean <- function(data) {
+  mean_value <- mean(data)
+  return(mean_value)
+}
+
+# Use the function
+income <- c(45000, 48000, 52000, 60000, 67000)
+mean_income <- calculate_mean(income)
+```
+
+##### Loops in R
+
+Loops repeat a block of code multiple times.
+
+```{r}
+# For loop
+for (i in 1:5) {
+  print(paste("Iteration", i))
+}
+```
+
+```{r}
+# While loop
+counter <- 1
+while (counter <= 5) {
+  print(paste("Counter value:", counter))
+  counter <- counter + 1
+}
+```
+
+Functions and loops are powerful tools that allow you to automate tasks and perform repetitive operations efficiently. Practice using them to reinforce your understanding.
+
+#### Exercises
+
+1. Write a function calculate_median(data) that calculates the median of a dataset. Test it with the income dataset.
+
+2. Use a for loop to print the squares of numbers from 1 to 10.
+
+3. Implement a while loop that calculates the sum of numbers from 1 to 50.
+
+----

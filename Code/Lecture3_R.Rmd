@@ -1,0 +1,369 @@
+---
+title: "R Notebook"
+output: html_notebook
+---
+
+# ECON 57: Introduction to Statistics and Probability for Economists with R Programming
+
+## Functions, Loops, Descriptive Statistics, and Economic Applications
+
+### Contents
+
+#### Descriptive Statistics
+
+##### Mean and Median
+
+The mean and median are measures of central tendency that provide insights into the typical value of a dataset. While both values indicate the center of the data, they can differ when the data is skewed or contains outliers. The median is less sensitive to outliers.
+
+```{r}
+# Calculate mean and median
+income <- c(40000, 45000, 52000, 60000, 67000)
+mean_income <- mean(income)
+median_income <- median(income)
+
+print(paste("Mean Income:", mean_income))
+print(paste("Median Income:", median_income))
+```
+
+In this example, we calculated the mean and median of a dataset representing different income levels. The mean is the arithmetic average of the values, while the median is the middle value when the data is sorted. If the dataset has an even number of values, the median is the average of the two middle values.
+
+##### Quantiles
+
+Quantiles divide a dataset into intervals, helping us understand how values are distributed. The median is the 50th percentile, but other percentiles (e.g., quartiles) can also be calculated.
+
+```{r}
+# Calculate quartiles
+quartiles <- quantile(income, probs = c(0.25, 0.5, 0.75))
+print(paste("Income Quartiles:", quartiles)) # note vectorization
+```
+
+##### Mode
+
+The mode is the value that appears most frequently in a dataset.
+
+```{r}
+# Calculate mode
+income_mode <- as.numeric(names(sort(table(income), decreasing = TRUE)[1]))
+print(paste("Income mode:", income_mode))
+```
+
+#### Measures of dispersion
+
+These measures provide insights into the variability of data points.
+
+##### Variability or Dispersion
+
+Variability refers to how spread out the data values are. A larger variability indicates greater differences among the values.
+
+```{r}
+# Calculate range
+data_range <- max(income) - min(income)
+data_range
+```
+
+##### Indices of Dispersion
+
+Indices of dispersion, such as variance and standard deviation, quantify the spread of data points around the mean.
+
+```{r}
+# Calculate variance and standard deviation
+var_income <- var(income)
+sd_income <- sd(income)
+
+print(paste("Income variance:", var_income))
+print(paste("Income standard deviation:", sd_income))
+```
+
+##### Coefficient of Variation
+
+The coefficient of variation (CV) compares the standard deviation to the mean, providing a relative measure of variability.
+
+```{r}
+# Calculate coefficient of variation
+cv_income <- (sd_income / mean_income) * 100
+print(paste("Income CV:", cv_income))
+```
+
+##### Skewness and Kurtosis
+
+Skewness measures the asymmetry of the distribution, while kurtosis indicates the degree of peakedness or flatness compared to a normal distribution.
+
+```{r}
+#install.packages("e1071")
+library(e1071)  # Make sure e1071 package is installed
+```
+
+
+```{r}
+# Calculate skewness and kurtosis
+skewness_income <- skewness(income)
+kurtosis_income <- kurtosis(income)
+
+print(paste("Income skewness:", skewness_income))
+print(paste("Income kurtosis", kurtosis_income))
+```
+
+**Exercise 1:** Calculate the quartiles, mode, range, variance, and other measures for a different dataset. Analyze how these measures provide insights into the characteristics of the data. How does the mean and median of your data distribution change as the standard deviation changes?
+
+##### Functions in R
+
+Functions are blocks of code that can be reused for specific tasks. A function has a name and is preceded by the reserved word function(). Functions are essential for organizing and reusing code. They encapsulate a set of instructions under a single name for easy invocation.
+
+```{r}
+# Define a function
+calculate_mean <- function(data) {
+  mean_value <- mean(data)
+  return(mean_value)
+}
+
+# Use the function
+income <- c(45000, 48000, 52000, 60000, 67000)
+mean_income <- calculate_mean(income)
+print(paste("Mean Income:", mean_income))
+```
+
+In the above example, we defined a function calculate_mean() that takes a dataset as input and returns the mean value. This makes it easier to compute the mean for different datasets.
+
+**Exercise 2:** Economic Analysis with Functions
+
+Imagine you're an economist analyzing inflation rates over the past few years. You have the following data representing annual inflation rates (%):
+
+```{r}
+inflation_rates <- c(2.1, 1.8, 2.5, 2.2, 2.9)
+```
+
+a) Write a function named calculate_average_inflation that takes a vector of inflation rates as input and returns the average inflation rate.
+
+b) Use the function to calculate the average inflation rate for the provided inflation_rates.
+
+##### Loops in R
+
+Loops repeat a block of code multiple times. Loops are essential for automating repetitive tasks or iterating over a sequence of values.
+
+***For Loop (Predetermined Iterations)***
+
+The for loop iterates over a sequence of values for a specified number of iterations.
+
+```{r}
+# For loop 
+for (i in 1:5) {
+  print(paste("Iteration", i))
+}
+```
+
+**Exercise 3:** Predictive Modeling with Loops
+
+Suppose you're studying the sales growth of a company over the next five years. You have historical sales data for the last three years (in thousands of dollars):
+
+```{r}
+sales_data <- c(120, 150, 180)
+```
+
+You've projected that the sales growth will follow a consistent pattern: the sales in the next year will increase by 20% compared to the previous year.
+
+a) Write a loop that predicts and prints the projected sales for each of the next two years based on the growth pattern.
+
+b) Calculate the total projected sales for the next five years using the loop.
+
+***While Loop (Conditional Iterations)***
+
+The while loop continues to iterate as long as a given condition is true.
+
+```{r}
+# While loop 
+counter <- 1
+while (counter <= 5) {
+  print(paste("Counter value:", counter))
+  counter <- counter + 1
+}
+```
+
+**Exercise 4:** Investment Analysis with Functions and Loops
+
+You're an investment analyst evaluating the performance of two stocks, A and B. You have the following data representing the annual returns (%):
+
+```{r}
+stock_a_returns <- c(12, 8, 15, 10, 9)
+stock_b_returns <- c(10, 7, 11, 14, 12)
+```
+
+a) Write a function named calculate_annual_mean that takes a vector of annual returns as input and returns the mean annual return.
+
+b) Calculate the mean annual return for both stock A and stock B using the function.
+
+c) Write a loop that calculates and prints the difference between the corresponding returns of stock A and stock B for each year.
+
+Functions and loops are powerful tools that allow you to automate tasks and perform repetitive operations efficiently. Incorporate functions and loops into your programming toolbox to enhance code efficiency and maintainability. Regular practice will help you become proficient in using these concepts effectively.
+
+
+#### Comprehensive Exercises
+
+The following two exercises will challenge you to implement all the topics we have covered in class so far: variables, descriptive statistics, basic visualizations, functions, and loops in a context applied to economics. Take your time to work through each. Feel free to work in groups.
+
+***Inflation and GDP growth***
+
+Imagine you're working as an economic analyst for a research firm. Your task is to analyze a dataset containing information about the inflation rates and GDP growth rates of different countries over a five-year period.
+
+Dataset:
+
+```{r}
+# Country data
+countries <- c("USA", "China", "Germany", "India", "Brazil")
+years <- c(2010, 2011, 2012, 2013, 2014)
+inflation_rates <- matrix(c(2.1, 1.8, 2.5, 2.2, 2.9, # USA
+                            3.0, 2.7, 2.3, 5.5, 3.8, # China
+                            2.5, 2.4, 2.2, 6.0, 3.2, # Germany
+                            2.8, 2.6, 2.9, 5.2, 4.0, # India
+                            3.5, 3.3, 3.1, 7.0, 4.8),# Brazil
+                          ncol = 5, dimnames = list(countries, years))
+
+gdp_growth_rates <- matrix(c(2.5, 6.0, 1.8, 7.0, 1.2,
+                             3.0, 6.5, 1.6, 7.5, 1.0,
+                             1.9, 5.0, 1.2, 6.8, 0.8,
+                             2.8, 7.2, 1.5, 6.5, 1.3,
+                             0.5, 5.5, 0.9, 6.0, 0.6), ncol = 5,
+                           dimnames = list(countries, years))
+
+print(inflation_rates)
+print("---------------------------")
+print(gdp_growth_rates)
+```
+
+Your task is to:
+
+a) Calculate the mean inflation rate and mean GDP growth rate for each country over the five-year period. Write a function to perform this calculation.
+
+b) Create a bar plot to compare the mean inflation rates of the countries. Label the bars with country names.
+
+c) Write a loop to determine the country with the highest GDP growth rate in each year and print the results.
+
+**Hints:**
+
+Research and use the apply() function to calculate the means for each country.
+Utilize the barplot() function for the bar plot.
+Use a for loop to check each country's GDP
+
+**solution**
+
+a) 
+
+```{r, echo=FALSE}
+# Calculate mean inflation rate and mean GDP growth rate
+calculate_mean <- function(data) {
+  mean_value <- mean(data)
+  return(mean_value)
+}
+
+mean_inflation <- apply(inflation_rates, 1, calculate_mean)
+mean_gdp_growth <- apply(gdp_growth_rates, 1, calculate_mean)
+
+print(paste("Average Inflation:", mean_inflation))
+print(paste("Average GDP growth:", mean_gdp_growth))
+```
+b)
+
+```{r, echo=FALSE}
+# Create a bar plot for mean inflation rates
+barplot(mean_inflation, main = "Mean Inflation Rates by Country",
+        names.arg = countries, xlab = "Countries", ylab = "Mean Inflation Rate")
+```
+c)
+
+```{r}
+for (i in 1:length(years)) {
+  year <- years[i]
+  gdp_growth <- gdp_growth_rates[, i]
+  max_gdp_growth_country <- countries[which.max(gdp_growth)]
+  max_growth_rate <- max(gdp_growth)
+  
+  cat("Year:", year, "\n")
+  cat("Country with the highest GDP growth rate:", max_gdp_growth_country, "\n")
+  cat("GDP growth rate:", max_growth_rate, "\n\n")
+}
+```
+
+***Economic Data Analysis and Visualization***
+
+Imagine you're working as an economic analyst for a research firm. Your task is to analyze a dataset containing information about the income distribution of individuals in different regions. The dataset includes the income levels and regions of individuals.
+
+Dataset:
+
+```{r}
+# Individual data
+regions <- c("North", "South", "East", "West", "Central")
+income_levels <- c(43000, 38000, 52000, 48000, 55000, 42000, 38000, 41000, 49000, 42000,
+                    35000, 38000, 39000, 41000, 44000, 57000, 55000, 54000, 52000, 50000)
+```
+
+Your task is to:
+
+a) Create a frequency distribution table that summarizes the income levels. Include columns for income ranges and the frequency of individuals within each range.
+
+b) Calculate and print the mean and median income levels for all individuals.
+
+c) Create a histogram to visualize the distribution of income levels. Label the axes accordingly.
+
+d) Calculate and print the variance, standard deviation, skewness, and kurtosis of the income levels.
+
+**Hints:**
+
+- Research and use the seq() command to create a sequence of income ranges given the minimum and maximum income level. Break the ranges into blocks of fixed size using the ***by*** argument of seq(). Note that to produce a histogram you will need to adjust the ending point of the sequence by summing the length of the range to the maximum value.
+
+- Use the cut() command to caztegorize data into intervals and the table() function to create the frequency distribution table.
+
+- Utilize the mean() and median() functions for the mean and median calculations.
+
+- Utilize the hist() function for creating a histogram.
+
+- Utilize the var(), sd(), skewness(), and kurtosis() functions from the e1071 package for variance, standard deviation, skewness, and kurtosis calculations.
+
+**solution**
+
+a)
+
+```{r, echo=FALSE}
+# Frequency distribution table
+income_ranges <- seq(min(income_levels), max(income_levels)+5000, by = 5000) # adjusted to ensure that the breaks span the full range of the income levels
+freq_table <- cut(income_levels, breaks = income_ranges, include.lowest = TRUE)
+freq_counts <- table(freq_table)
+
+# Print frequency distribution table
+print(freq_counts)
+```
+
+b)
+
+```{r, echo=FALSE}
+# Calculate and print mean and median
+mean_income <- mean(income_levels)
+median_income <- median(income_levels)
+print(paste("Mean Income:", mean_income))
+print(paste("Median Income:", median_income))
+```
+
+c)
+
+```{r, echo=FALSE}
+# Create a histogram
+hist(income_levels, main = "Income Distribution",
+     xlab = "Income Levels", ylab = "Frequency",
+     breaks = income_ranges, col = "skyblue")
+```
+
+d)
+
+```{r, echo=FALSE}
+# Calculate and print variance, standard deviation, skewness, and kurtosis
+library(e1071)
+income_variance <- var(income_levels)
+income_sd <- sd(income_levels)
+income_skewness <- skewness(income_levels)
+income_kurtosis <- kurtosis(income_levels)
+
+print(paste("Income Variance:", income_variance))
+print(paste("Income Standard Deviation:", income_sd))
+print(paste("Income Skewness:", income_skewness))
+print(paste("Income Kurtosis:", income_kurtosis))
+```
+
+----

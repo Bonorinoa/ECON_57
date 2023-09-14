@@ -1,0 +1,167 @@
+---
+title: "R Notebook"
+output: html_notebook
+---
+
+# Calculus in R 
+
+While R isn't primarily used for solving calculus problems, it can very much handle basic differential and integral calculus operations. So let’s dive into calculus operations like derivatives and integrals, using R.
+
+## I. Derivatives
+
+To take derivatives in R, we’ll use an effective package called `pracma`.
+
+```{r}
+install.packages("pracma")
+library(pracma)
+```
+The `derivFunc()` command helps compute the derivative of a function.
+
+### Derivative rules
+
+1. **Constants**: The derivative of a constant is 0.
+
+```{r}
+f <- expression(5) # a constant function
+fprime <- D(f, "x")
+fprime # expect 0
+```
+2. **Power Rule**: The derivative of a to the power of n is n times a to the power n-1.
+
+```{r}
+# Expression or formula
+f <- expression(x^2 + 5*x + 1)
+  
+cat("\nUsing D() function:\n")
+print(D(f, 'x'))
+```
+
+```{r}
+# Using D() Function
+cat("\nUsing D() function:\n")
+print(D(quote(sinpi(x^2)), "x"))
+```
+
+3. **Sum Rule**: The derivative of a sum of two functions is the sum of their derivatives.
+
+```{r}
+# sum of two functions
+f1 <- expression(x^2)
+f2 <- expression(x^3)
+df1 = D(f1, "x")
+df2 = D(f2, "x")
+
+x <- 2
+sum1 <- eval(parse(text=df1))
+sum2 <- eval(parse(text=df2))
+total <- sum1+sum2 # expect 16
+total
+```
+
+4. **Chain Rule**: If we have a composition of two functions, then the derivative of the composite function is the derivative of the first function times the derivative of the second function.
+
+```{r}
+f <- function(x) (x^2 + 2)^3 # chain of two functions
+fprime <- D(f, "X")
+fprime(2) # expect 144 (value as per the chain rule)
+```
+
+## II. Integrals
+
+The `integrate()` function is used to calculate integrals in R.
+
+### Integral rules
+
+1. **Constant Rule**: The integral of a constant is the constant times x.
+
+```{r}
+f <- function(x) {4*x} # a constant function
+area <- integrate(f, lower = 0, upper = 1)
+area$value # expect 2
+```
+2. **Power Rule**: The integral of x to the power n is 1/(n+1) times x to the power n+1.
+
+```{r}
+f <- function(x) x^2 # x raised to the power 2
+area <- integrate(f, lower = 0, upper = 1)
+area$value # expect 1/3 ( as per the power rule 1/(2+1)*1^(2+1) )
+```
+3. **Sum Rule**: The integral of the sum of two functions is the sum of their integrals.
+
+```{r}
+f1 <- function(x) x 
+f2 <- function(x) x^2 
+f <- function(x) f1(x) + f2(x) # sum of two functions
+area <- integrate(f, lower = 0, upper = 1)
+area$value # expect 5/6 ( value of the sum of the integrals)
+```
+
+# Economic Applications 
+
+1. **Demand and Supply**: Derivatives are employed in economic models to determine the slope of the demand and supply curves.
+
+```{r}
+Qd <- function(P) {15 - 0.5 * P} # the demand function
+Qs <- function(P) -5 + 1.5 * P # the supply function
+D(Qd, "P") # derivative of the demand function
+D(Qs, "P") # derivative of the supply function
+```
+2. **Consumer Surplus**: The integral can calculate the consumer surplus in a market.
+
+```{r}
+Integrand <- function(x) Qd(x) - Qs(x)
+area <- integrate(Integrand, lower = 0, upper = 10)
+area$value # consumer surplus
+```
+
+Calculus in R might be broad, but with these basics covered, you can confidently solve the problems dealing with derivatives and definite integrals. These tools and applications are critical in economic modeling, forecasting, and simulations.
+
+# Bayesian Statistics in R 
+
+Bayesian statistics forms the backbone of many economic and financial models. It uses the knowledge of prior events to predict future events. Let's get started with understanding Bayes' Theorem and how it can be applied.
+
+```{r}
+#Consider following example:
+P_E1 <- 0.5 #the prior probability of event E1
+P_E2 <- 0.5 #the prior probability of event E2
+P_F_E1 <- 0.3 #the probability of event F given E1 has occurred
+P_F_E2 <- 0.6 #the probability of event F given E2 has occurred
+
+#Probability of F using Law of total probability
+P_F <- P_E1*P_F_E1 + P_E2*P_F_E2
+
+#Bayes' Rule
+P_E1_F <- (P_F_E1*P_E1)/P_F 
+P_E2_F <- (P_F_E2*P_E2)/P_F
+
+P_E1_F
+P_E2_F
+```
+
+In this example, even though the prior probabilities of events E1 and E2 were the same (each 0.5), using the Bayes' rule we can see that the probability of occurrence of E2 is much higher than E1 given that the event F has happened. 
+
+# Economic Scenario: Stock Selection
+
+Suppose we are an investment manager and our prior belief is that the probability of a stock earning a positive return in a given month is 0.7. However, we have also analyzed past 12 months, and it turns out the stock has earned a positive return in 8 of them.
+
+Using Bayesian statistics, we can update our belief about the probability of earning a positive return with this new information.
+
+```{r}
+# Prior belief
+prior_alpha <- 0.7
+prior_beta <- 0.3
+
+# Observed data
+positive_returns <- 8
+total_months <- 12
+
+# Posterior belief
+posterior_alpha <- prior_alpha + positive_returns
+posterior_beta <- prior_beta + total_months - positive_returns
+
+# Estimate of probability of earning positive return
+posterior_mean <- (posterior_alpha) / (posterior_alpha + posterior_beta)
+posterior_mean
+```
+
+In this example, our posterior belief (or the updated probability) about the stock earning a positive return given the new data is around 0.67.

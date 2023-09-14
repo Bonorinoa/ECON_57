@@ -1,0 +1,202 @@
+---
+title: "R Notebook"
+output: html_notebook
+---
+
+# ECON 57: Introduction to Statistics and Probability for Economists with R Programming
+
+## Lecture 2: Introduction to R Programming - Part II
+
+### Contents
+
+#### Matrices and Tables
+
+##### Matrices
+A matrix is a two-dimensional collection of elements of the same data type. You can create matrices using the `matrix()` function on a vector. matrix() needs to be told in how many rows and columns the vector elements are to be organized. The length (number of elements) of rows must be equal, as well as the length of columns.
+
+```{r}
+# Create a 2x3 matrix
+mat <- matrix(c(1, 2, 3, 4, 5, 6), nrow = 2, ncol = 3)
+print(mat)
+```
+
+```{r}
+# Create a matrix with sales data and named dimensions
+sales_matrix <- matrix(c(100, 150, 200, 80, 120, 160), nrow = 3, byrow = TRUE,
+                        dimnames = list(c("Month1", "Month2", "Month3"),
+                                        c("ProductA", "ProductB")))
+sales_matrix
+```
+
+**Exercise 1:** Create a matrix price_matrix representing the prices of two products over the same three months. The prices are 10, 15, and 20 for Product A and 5, 8, and 12 for Product B. Hint: Use the matrix() function.
+
+```{r}
+# Matrix addition
+total_sales <- sales_matrix + price_matrix
+total_sales
+```
+
+**Exercise 2:** Calculate the total revenue matrix by multiplying the sales_matrix and price_matrix. Hint: Use the * operator.
+
+##### Tables
+
+A table is a special kind of matrix used for data summaries, these are similar to matrices but with some additional features for data analysis. Tables in R are represented using the data.frame class, which allows you to store data with different types (e.g., numeric, character). Let's create a table for unemployment rates over four quarters.
+
+```{r}
+# Create a data frame for unemployment rates
+quarters <- c("Q1", "Q2", "Q3", "Q4")
+unemployment_rates <- c(5.2, 5.5, 5.7, 5.9)
+unemployment_data <- data.frame(Quarter = quarters, Rate = unemployment_rates)
+unemployment_data
+
+```
+
+You can access specific elements in a matrix or table using row and column indices.
+
+```{r}
+# Access a specific element in the sales_matrix
+sales_productA_month2 <- sales_matrix[2, "ProductA"]
+sales_productA_month2
+```
+
+**Exercise 3:** Access the unemployment rate for the third quarter from the unemployment_data table.
+
+We'll use the table() function to create frequency tables.
+
+```{r}
+# Creating a frequency table
+data <- c("A", "B", "A", "C", "B", "A")
+freq_table <- table(data)
+print(freq_table)
+```
+
+
+**Exercise 4:** Given a dataset of student grades grades = c("A", "B", "B", "C", "A", "A", "B"), create a frequency table using the table() function.
+
+#### Frequency Distributions
+
+##### Univariate Numerical Frequency Distributions
+
+Univariate numerical frequency distributions are used to summarize the distribution of a single numerical variable. There are two types: discrete and continuous.
+
+###### Discrete Frequency Distribution
+
+A discrete frequency distribution is used when the data consists of distinct, separate values. Let's consider a dataset of exam scores:
+
+```{r}
+# Dataset of exam scores
+exam_scores <- c(85, 92, 78, 90, 85, 88, 78, 92, 92, 90)
+
+# Create a discrete frequency table
+freq_table_discrete <- table(exam_scores)
+print(freq_table_discrete)
+
+# Create a histogram for the exam scores
+hist(exam_scores, main = "Histogram of Exam Scores",
+     xlab = "Exam Scores", ylab = "Frequency", col = "skyblue", border = "black")
+
+```
+
+###### Continuous Frequency Distribution
+
+A continuous frequency distribution is used for variables that can take any value within a range. Let's consider a dataset of weights of randomly selected fruits in grams:
+
+```{r}
+# Dataset of fruit weights (in grams)
+fruit_weights <- c(120, 150, 140, 170, 180, 135, 160, 150, 175, 130)
+
+# Choose the number of bins (intervals) for the histogram
+num_bins <- 4
+
+# Create a histogram for the fruit weights
+hist(fruit_weights, breaks = num_bins,
+     main = "Histogram of Fruit Weights",
+     xlab = "Fruit Weights (grams)", ylab = "Frequency", col = "salmon", border = "black")
+
+# Calculate class width for the continuous frequency distribution
+data_range <- max(fruit_weights) - min(fruit_weights)
+class_width <- data_range / num_bins
+cat("Class Width:", class_width, "grams\n")
+
+# Calculate frequency table for continuous distribution
+freq_table_continuous <- cut(fruit_weights, breaks = num_bins, 
+                             right = TRUE, include.lowest = TRUE)
+print(table(freq_table_continuous))
+
+```
+
+For continuous distributions, we created a histogram to visualize the distribution of fruit weights and calculated the class width to determine the bin size. We also generated a frequency table using the cut() function to categorize the data into intervals.
+
+#### Basic Data Visualization
+
+Visualizations are essential tools in economics. They help us understand patterns, relationships, and distributions in data. Bar plots are used to compare categorical data, while pie charts display proportions. These visualizations make complex data more accessible and aid in decision-making.
+
+##### Bar Plots
+
+Bar plots display the distribution of categorical variables. They are particularly useful when you want to compare the frequencies or proportions of different categories.
+
+```{r}
+# Create a bar plot
+categories <- c("Category A", "Category B", "Category A", "Category C", "Category B")
+barplot(table(categories), main = "Categorical Variable Distribution",
+        xlab = "Categories", ylab = "Frequency", col = "skyblue")
+```
+
+In this example, we created a bar plot to visualize the distribution of categories. The table() function is used to calculate the frequency of each category, and the resulting counts are represented using the height of the bars.
+
+##### Box Plots
+
+Box plots, also known as box-and-whisker plots, provide a visual summary of the distribution of a dataset. They display the median, quartiles, and any potential outliers. A box plot aids in identifying outliers.
+
+```{r}
+# Create a box plot
+heights <- c(160, 170, 175, 150, 185, 165, 170, 155, 180, 190, 140)
+boxplot(heights, main = "Height Box Plot", ylab = "Height (cm)", col = "salmon")
+
+```
+
+The box plot represents the five-number summary of the data: minimum, first quartile (Q1), median, third quartile (Q3), and maximum. The "box" itself spans from Q1 to Q3, with a line inside representing the median. The "whiskers" extend to the minimum and maximum values within 1.5 times the interquartile range (IQR) from the box. Points beyond the whiskers are considered potential outliers.
+
+##### Density Plots
+
+Density plots show the estimated probability density function of a dataset. They are useful for visualizing the overall distribution of continuous data.
+
+```{r}
+# Create a density plot
+density_plot <- density(heights)
+plot(density_plot, main = "Height Density Plot", xlab = "Height (cm)", ylab = "Density", col = "blue")
+
+```
+
+In a density plot, the y-axis represents the density values, which provide an estimate of the probability density of the data at different points along the x-axis.
+
+**Exercise 7:** Create a density plot for a different dataset of your choice, such as the weights of randomly selected fruits or the GDP of various countries. Adjust the labeling and coloring to make the plot informative and visually appealing.
+
+##### Line plots
+
+Line plots are used to visualize trends or changes in a dataset over time or another continuous variable. They are commonly used in economics to represent time series data such as stock prices, GDP growth, or inflation rates.
+
+```{r}
+# Create a line plot
+years <- c(2015, 2016, 2017, 2018, 2019)
+gdp_growth <- c(2.5, 2.8, 3.2, 2.9, 2.7)
+plot(years, gdp_growth, type = "l", main = "GDP Growth Over Years",
+     xlab = "Year", ylab = "GDP Growth (%)", col = "blue")
+
+```
+
+##### Pie chart
+
+Pie charts display the proportion of different categories in a dataset. They are suitable for illustrating relative contributions or shares.
+
+```{r}
+# Create a pie chart
+expenses <- c(Housing = 30, Transportation = 20, Food = 15, Healthcare = 10, Other = 25)
+pie(expenses, main = "Monthly Expenses")
+```
+
+In this example, the expenses vector contains the percentages of various expense categories. The pie() function creates a pie chart illustrating the distribution of expenses.
+
+**Exercise 8:** Create a pie chart to show the distribution of the budget allocated to different sectors (Education, Defense, Healthcare, Infrastructure, Others) in a government's annual budget. Use arbitrary percentages for the sectors.
+
+----

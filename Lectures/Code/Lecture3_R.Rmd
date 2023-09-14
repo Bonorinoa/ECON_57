@@ -1,0 +1,429 @@
+---
+title: "R Notebook"
+output: html_notebook
+---
+
+# ECON 57: Introduction to Statistics and Probability for Economists with R Programming
+
+## Bsic visualizations, Functions, Loops, Exploratory Data Analysis
+
+### Contents
+
+#### Basic Data Visualization
+
+Visualizations are essential tools in economics. They help us understand patterns, relationships, and distributions in data. Bar plots are used to compare categorical data, while pie charts display proportions. These visualizations make complex data more accessible and aid in decision-making.
+
+##### Bar Plots
+
+Bar plots display the distribution of categorical variables. They are particularly useful when you want to compare the frequencies or proportions of different categories.
+
+```{r}
+# Create a bar plot
+categories <- c("Category A", "Category B", "Category A", "Category C", "Category B")
+barplot(table(categories), main = "Categorical Variable Distribution",
+        xlab = "Categories", ylab = "Frequency", col = "skyblue")
+```
+
+In this example, we created a bar plot to visualize the distribution of categories. The table() function is used to calculate the frequency of each category, and the resulting counts are represented using the height of the bars.
+
+#### Histograms
+
+A histogram divides the range of continuous data into intervals called bins and represents the frequency of observations falling within each bin. Bar charts and histograms help visualize the distribution of continuous data and identify patterns.
+
+```{r}
+# R has some datasets built into it that allows us to practice with real data
+data()
+```
+
+```{r}
+# Load the built-in iris dataset
+data(iris)
+
+# Extract the "Sepal.Length" column
+sepal_lengths <- iris$Sepal.Length
+
+# Create a histogram
+hist(sepal_lengths,
+     col = "lightblue",  # Bar color
+     main = "Histogram of Sepal Lengths",
+     xlab = "Sepal Length",
+     ylab = "Frequency",
+     breaks = 15  # Number of bins
+)
+
+# Add a vertical line for the mean
+mean_length <- mean(sepal_lengths)
+abline(v = mean_length, col = "red", lwd = 2)
+
+# Add a legend
+legend("topright", legend = paste("Mean =", round(mean_length, 2)), col = "red", lwd = 2)
+
+# Interpretation: Describe the distribution of sepal lengths
+# Example: The histogram shows that most sepal lengths are concentrated between approximately 4.5 and 5.5 units, with a mean sepal length of 5.84 units. The distribution appears roughly unimodal and slightly right-skewed.
+
+```
+
+##### Box Plots
+
+Box plots, also known as box-and-whisker plots, provide a visual summary of the distribution of a dataset. They display the median, quartiles, and any potential outliers. A box plot aids in identifying outliers.
+
+```{r}
+# Create a box plot
+heights <- c(160, 170, 175, 150, 185, 165, 170, 155, 180, 190, 140)
+boxplot(heights, main = "Height Box Plot", ylab = "Height (cm)", col = "salmon")
+
+```
+
+The box plot represents the five-number summary of the data: minimum, first quartile (Q1), median, third quartile (Q3), and maximum. The "box" itself spans from Q1 to Q3, with a line inside representing the median. The "whiskers" extend to the minimum and maximum values within 1.5 times the interquartile range (IQR) from the box. Points beyond the whiskers are considered potential outliers.
+
+##### Pie chart
+
+Pie charts display the proportion of different categories in a dataset. They are suitable for illustrating relative contributions or shares.
+
+```{r}
+# Create a pie chart
+# named vector
+expenses <- c(Housing = 30, Transportation = 20, Food = 15, Healthcare = 10, Other = 25)
+pie(expenses, main = "Monthly Expenses")
+```
+
+In this example, the expenses vector contains the percentages of various expense categories. The pie() function creates a pie chart illustrating the distribution of expenses.
+
+##### Line plots
+
+Line plots are used to visualize trends or changes in a dataset over time or another continuous variable. They are commonly used in economics to represent time series data such as stock prices, GDP growth, or inflation rates.
+
+```{r}
+# Create a line plot
+years <- c(2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022)
+
+# https://www.macrotrends.net/countries/USA/united-states/gdp-growth-rate#:~:text=U.S.%20GDP%20Growth%20Rate%20-%20Historical%20Data%20,%20%20-0.65%25%20%2058%20more%20rows%20
+gdp_growth <- c(2.71, 1.67, 2.24, 2.95, 2.29, -2.77, 5.95, 2.06)
+plot(years, gdp_growth, type = "l", main = "GDP Growth Over Years",
+     xlab = "Year", ylab = "GDP Growth (%)", col = "blue")
+
+```
+
+#### Scatterplot
+
+Scatterplots are used to visualize the relationship between two continuous variables. Each data point is represented as a point on the plot, with one variable on the x-axis and the other on the y-axis.
+
+Scatterplots help identify patterns, trends, and the strength of the relationship between the two variables. They play a key role in regression analysis and thus econometrics.
+
+```{r}
+# Load the built-in iris dataset
+data(iris)
+
+# Create a scatterplot of sepal length vs. sepal width
+plot(x=iris$Sepal.Length, y=iris$Sepal.Width,
+     type = "p",  # "p" for points
+     col = iris$Species,  # Color points by species
+     pch = 19,  # Point shape (filled circle)
+     xlab = "Sepal Length",
+     ylab = "Sepal Width",
+     main = "Scatterplot of Sepal Length vs. Sepal Width by Species"
+)
+
+# Add a legend
+legend("topright", legend = levels(iris$Species), 
+       col = 1:3, pch = 19, title = "Species")
+
+# Add a grid (optional)
+grid()
+
+```
+
+**Exercise 5:** Create a pie chart to show the distribution of the budget allocated to different sectors (Education, Defense, Healthcare, Infrastructure, Others) in a government's annual budget. Use arbitrary percentages for the sectors.
+
+```{r}
+# https://fiscaldata.treasury.gov/americas-finance-guide/federal-spending/
+econ_sectors <- c(Social_Security=21, Health=14, Income_Security=13, National_Defense=13, Medicare=12, Net_Interest=11, Education=5, Veteran_Benefits=4, Transportation=2, Community_Regional_Development=1, Other=4)
+
+# https://www.nceas.ucsb.edu/sites/default/files/2020-04/colorPaletteCheatsheet.pdf
+pie(econ_sectors, 
+    main="USA Budget - 2023",
+    radius=0.8,
+    col=c("blue", 'green', "yellow", "violetred1", "cyan", 
+          "brown", 'orange', 'lightblue','salmon', "purple", "pink"))
+```
+
+##### Functions in R
+
+Functions are blocks of code that can be reused for specific tasks. A function has a name and is preceded by the reserved word function(). Functions are essential for organizing and reusing code. They encapsulate a set of instructions under a single name for easy invocation.
+
+```{r}
+# Define a function
+calculate_mean <- function(data) {
+  mean_value <- mean(data)
+  return(mean_value)
+}
+
+# Use the function
+income <- c(45000, 48000, 52000, 60000, 67000)
+mean_income <- calculate_mean(income)
+print(paste("Mean Income:", mean_income))
+```
+
+In the above example, we defined a function calculate_mean() that takes a dataset as input and returns the mean value. This makes it easier to compute the mean for different datasets.
+
+**Exercise 2:** Economic Analysis with Functions
+
+Imagine you're an economist analyzing inflation rates over the past few years. You have the following data representing annual inflation rates (%):
+
+```{r}
+inflation_rates <- c(2.1, 1.8, 2.5, 2.2, 2.9)
+```
+
+a) Write a function named calculate_avg_var_inflation that takes in the vector of inflation rates as input and returns a report with the average inflation rate and the variance of the input vector.
+
+b) Use the function to calculate the average inflation rate for the provided inflation_rates.
+
+**Solution:**
+
+```{r}
+calculate_avg_var_inflation <- function(data) {
+  avg_inflation <- mean(data, na.rm=T)
+  var_inflation <- var(data, na.rm=T)
+  
+  res <- paste("Average inflation = ", avg_inflation, "; Variance = ", var_inflation)
+  return(res)
+}
+
+calculate_avg_var_inflation(inflation_rates)
+```
+
+##### Loops in R
+
+Loops repeat a block of code multiple times. Loops are essential for automating repetitive tasks or iterating over a sequence of values.
+
+***For Loop (Predetermined Iterations)***
+
+The for loop iterates over a sequence of values for a specified number of iterations.
+
+```{r}
+# For loop 
+for (i in 1:5) {
+  print(paste("Iteration", i))
+}
+```
+
+```{r}
+# looping over elements in a vector
+vec2 <- c(2,4,1,6,7)
+
+for (elem in vec2) {
+  print(elem)
+}
+```
+**Sorting**
+
+Remember our toy example illustrating the swap operation from last week? With loops we can extend this idea to a list or vector of *n* elements
+```{r}
+# Create a vector of unsorted numbers
+numbers <- c(5, 2, 9, 1, 5, 6)
+
+# Bubble Sort algorithm using a for loop
+n <- length(numbers)
+for (i in 1:(n - 1)) {
+  for (j in 1:(n - i)) {
+    if (numbers[j] > numbers[j + 1]) {
+      # Swap numbers[j] and numbers[j + 1]
+      temp <- numbers[j]
+      numbers[j] <- numbers[j + 1]
+      numbers[j + 1] <- temp
+    }
+  }
+}
+
+# Print the sorted vector
+print(numbers)
+```
+
+***While Loop (Conditional Iterations)***
+
+The while loop continues to iterate as long as a given condition is true.
+
+```{r}
+# While loop 
+counter <- 1
+while (counter <= 5) {
+  print(paste("Counter value:", counter))
+  counter <- counter + 1
+}
+```
+
+**Compound interest**
+
+Compute number of years to achieve a target amount of money accounting for compound interest.
+
+```{r}
+# Initialize variables
+principal <- 1000  # Initial investment amount
+annual_rate <- 0.05  # Annual interest rate (5%)
+years <- 0  # Number of years
+future_value <- principal  # Initialize future value to the principal amount
+
+# Set a target future value (i.e., sentinel value)
+target_value <- 1500
+
+# Calculate compound interest using a while loop until we reach the target value
+while (future_value < target_value) {
+  # Calculate interest for the current year
+  interest <- future_value * annual_rate
+  
+  # Add the interest to the future value
+  future_value <- future_value + interest
+  
+  # Increment the number of years
+  years <- years + 1
+}
+
+# Print the results
+cat("It will take", years, "years for the initial investment of $", principal, "to grow to $", future_value, "reaching the target value of $", target_value, "\n")
+
+```
+
+Functions and loops are powerful tools that allow you to automate tasks and perform repetitive operations efficiently. Incorporate functions and loops into your programming toolbox to enhance code efficiency and maintainability. Regular practice will help you become proficient in using these concepts effectively.
+
+
+#### Comprehensive Exercises
+
+The following two exercises will challenge you to implement all the topics we have covered in class so far: variables, descriptive statistics, basic visualizations, functions, and loops in a context applied to economics. Take your time to work through each. Feel free to work in groups.
+
+***Inflation and GDP growth***
+
+Imagine you're working as an economic analyst for a research firm. Your task is to analyze a dataset containing information about the inflation rates and GDP growth rates of different countries over a five-year period.
+
+Dataset:
+
+```{r}
+# Country data
+countries <- c("USA", "China", "Germany", "India", "Brazil")
+years <- c(2010, 2011, 2012, 2013, 2014)
+inflation_rates <- matrix(c(2.1, 1.8, 2.5, 2.2, 2.9, # USA
+                            3.0, 2.7, 2.3, 5.5, 3.8, # China
+                            2.5, 2.4, 2.2, 6.0, 3.2, # Germany
+                            2.8, 2.6, 2.9, 5.2, 4.0, # India
+                            3.5, 3.3, 3.1, 7.0, 4.8),# Brazil
+                          ncol = 5, dimnames = list(countries, years))
+
+gdp_growth_rates <- matrix(c(2.5, 6.0, 1.8, 7.0, 1.2,
+                             3.0, 6.5, 1.6, 7.5, 1.0,
+                             1.9, 5.0, 1.2, 6.8, 0.8,
+                             2.8, 7.2, 1.5, 6.5, 1.3,
+                             0.5, 5.5, 0.9, 6.0, 0.6), ncol = 5,
+                           dimnames = list(countries, years))
+
+print(inflation_rates)
+print("---------------------------")
+print(gdp_growth_rates)
+```
+
+Your task is to:
+
+a) Calculate the mean inflation rate and mean GDP growth rate for each country over the five-year period. Write a function to perform this calculation.
+
+b) Create a bar plot to compare the mean inflation rates of the countries. Label the bars with country names.
+
+c) Write a loop to determine the country with the highest GDP growth rate in each year and print the results.
+
+**Hints:**
+
+Research and use the apply() function to calculate the means for each country.
+Utilize the barplot() function for the bar plot.
+Use a for loop to check each country's GDP
+
+**solution**
+
+a) 
+
+```{r, echo=FALSE}
+# Calculate mean inflation rate and mean GDP growth rate
+calculate_mean <- function(data) {
+  mean_value <- mean(data)
+  return(mean_value)
+}
+
+mean_inflation <- 
+mean_gdp_growth <- 
+
+print(paste("Average Inflation:", mean_inflation))
+print(paste("Average GDP growth:", mean_gdp_growth))
+```
+
+b)
+
+```{r, echo=FALSE}
+# Create a bar plot for mean inflation rates
+
+```
+
+c)
+
+```{r}
+# loop to find relevant country each year
+
+```
+
+***Economic Data Analysis and Visualization***
+
+Imagine you're working as an economic analyst for a research firm. Your task is to analyze a dataset containing information about the income distribution of individuals in different regions. The dataset includes the income levels and regions of individuals.
+
+Dataset:
+
+```{r}
+# Individual data
+regions <- c("North", "South", "East", "West", "Central")
+income_levels <- c(43000, 38000, 52000, 48000, 55000, 42000, 38000, 41000, 49000, 42000,
+                    35000, 38000, 39000, 41000, 44000, 57000, 55000, 54000, 52000, 50000)
+```
+
+Your task is to:
+
+a) Create a frequency distribution table that summarizes the income levels. Include columns for income ranges and the frequency of individuals within each range.
+
+b) Calculate and print the mean and median income levels for all individuals.
+
+c) Create a histogram to visualize the distribution of income levels. Label the axes accordingly.
+
+d) Calculate and print the variance, standard deviation, skewness, and kurtosis of the income levels.
+
+**Hints:**
+
+- Research and use the seq() command to create a sequence of income ranges given the minimum and maximum income level. Break the ranges into blocks of fixed size using the ***by*** argument of seq(). Note that to produce a histogram you will need to adjust the ending point of the sequence by summing the length of the range to the maximum value.
+
+- Use the cut() command to categorize data into intervals and the table() function to create the frequency distribution table.
+
+- Utilize the mean() and median() functions for the mean and median calculations.
+
+- Utilize the hist() function for creating a histogram.
+
+- Utilize the var(), sd(), skewness(), and kurtosis() functions from the e1071 package for variance, standard deviation, skewness, and kurtosis calculations.
+
+**solution**
+
+a)
+
+```{r, echo=FALSE}
+
+```
+
+b)
+
+```{r, echo=FALSE}
+
+```
+
+c)
+
+```{r, echo=FALSE}
+
+```
+
+d)
+
+```{r, echo=FALSE}
+
+```
+
+----
